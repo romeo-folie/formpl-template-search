@@ -8,6 +8,10 @@ export const InputContainer = styled.div`
   border-radius: 2px;
   width: 200px;
   padding: 5px 10px;
+  @media screen and (max-width: 768px) {
+    width: 90%;
+    margin: 10px auto 20px;
+  }
 `;
 
 export const Input = styled.input`

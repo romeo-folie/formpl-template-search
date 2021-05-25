@@ -1,6 +1,6 @@
 import React from "react";
 import SearchInput from "../search-input/search-input.component";
-import {HeaderContainer, Sorters, SortLabel} from "./header.styles";
+import {HeaderContainer, Sorters, Label} from "./header.styles";
 import Selector from "../selector/selector.component";
 
 const Header: React.FC = (props) => {
@@ -8,7 +8,7 @@ const Header: React.FC = (props) => {
     <HeaderContainer>
       <SearchInput />
       <Sorters>
-        <SortLabel>Sort By:</SortLabel>
+        <Label>Sort By:</Label>
         <Selector />
         <Selector />
         <Selector />
