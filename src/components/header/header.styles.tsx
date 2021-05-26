@@ -17,6 +17,8 @@ export const HeaderContainer = styled.div`
 export const Sorters = styled.div`
   display: flex;
   align-items: center;
+  /* flex-wrap: wrap;
+  justify-content: center; */
   & > *:not(:last-child) {
     margin-right: 10px;
   }

@@ -7,9 +7,13 @@ export const Container = styled.div`
   padding: 10px 12px;
   position: relative;
   font-size: 13px;
+
+  /* @media screen and (max-width: 600px) {
+    width: 100%;
+  } */
 `;
 
-export const Title = styled.div`
+export const Label = styled.div`
   position: absolute;
   top: -7px;
   left: 10px;
@@ -29,8 +33,14 @@ export const Icon = styled.img``;
 export const ListContainer = styled.div`
   position: absolute;
   width: 100%;
-  top: 30px;
-  display: none;
+  top: 40px;
+  background-color: #fff;
+  z-index: 50;
+  left: 0;
+  box-sizing: border-box;
+  -webkit-box-shadow: 0px 0px 5px 1px rgba(229, 229, 229, 0.86);
+  -moz-box-shadow: 0px 0px 5px 1px rgba(229, 229, 229, 0.86);
+  box-shadow: 0px 0px 5px 1px rgba(229, 229, 229, 0.86);
 `;
 
 export const List = styled.ul`
@@ -38,7 +48,16 @@ export const List = styled.ul`
   padding: 0;
 `;
 
-export const ListItem = styled.li`
-  margin-bottom: 2px;
+export const ListItem = styled.li<{active: boolean}>`
   cursor: pointer;
+  padding: 5px 10px;
+  &:not(:last-child) {
+    margin-bottom: 2px;
+  }
+
+  &:hover {
+    color: #08bd37;
+  }
+
+  background-color: ${({active}) => (active ? "#e5e5e5" : "#ffffff")}
 `;
