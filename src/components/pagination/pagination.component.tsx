@@ -24,8 +24,8 @@ const Pagination: React.FC = () => {
           <path
             d="M1 1L7 7L13 1"
             stroke="#8F8B8B"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </PLink>

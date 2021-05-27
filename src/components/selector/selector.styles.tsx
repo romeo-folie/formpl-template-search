@@ -26,9 +26,13 @@ export const Label = styled.div`
 export const Header = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
-export const Icon = styled.img``;
+export const Icon = styled.img`
+  pointer-events: none;
+  -webkit-tap-highlight-color: transparent;
+`;
 
 export const ListContainer = styled.div`
   position: absolute;
@@ -46,18 +50,17 @@ export const ListContainer = styled.div`
 export const List = styled.ul`
   list-style: none;
   padding: 0;
+  margin-bottom: 0;
 `;
 
 export const ListItem = styled.li<{active: boolean}>`
   cursor: pointer;
   padding: 5px 10px;
+  background-color: ${({active}) => (active ? "#e5e5e5" : "#ffffff")};
   &:not(:last-child) {
     margin-bottom: 2px;
   }
-
   &:hover {
     color: #08bd37;
   }
-
-  background-color: ${({active}) => (active ? "#e5e5e5" : "#ffffff")}
 `;
