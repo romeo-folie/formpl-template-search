@@ -23,7 +23,8 @@ const Selector: React.FC<IProps> = ({label, options}) => {
 
   const toggle = () => setIsOpen(!isOpen);
 
-  const onOptionClick = (value: string) => {
+  const onOptionClick = (value: string): void => {
+    // Dispatch action to store with name of selector and value
     setSelectedOption(value);
     setIsOpen(false);
   };

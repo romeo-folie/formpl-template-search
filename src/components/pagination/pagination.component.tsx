@@ -1,18 +1,43 @@
 import React from "react";
 import {Container, PLink, Page, Total} from "./pagination.styles";
+import {loadNewPage} from "../../redux/templates/template.actions";
+import {useSelector, useDispatch} from "react-redux";
+import {TemplateState} from "../../redux/templates/template.reducer";
 
 const Pagination: React.FC = () => {
-  return (
+  const dispatch = useDispatch();
+
+  const isLoading = useSelector<TemplateState, TemplateState["isFetching"]>(
+    (state) => state.isFetching
+  );
+
+  const totalPages = useSelector<TemplateState, TemplateState["totalPages"]>(
+    (state) => state.totalPages
+  );
+
+  const currentPage = useSelector<TemplateState, TemplateState["currentPage"]>(
+    (state) => state.currentPage
+  );
+
+  const onNextClick = () => {
+    dispatch(loadNewPage(1));
+  };
+
+  const onPreviousClick = () => {
+    dispatch(loadNewPage(-1));
+  };
+
+  return !isLoading ? (
     <Container>
-      <PLink>Previous</PLink>
+      <PLink onClick={onPreviousClick} disabled={currentPage === 1}>Previous</PLink>
 
       <PLink>
-        <Page>1</Page>
+        <Page>{currentPage}</Page>
         of
-        <Total>24</Total>
+        <Total>{totalPages}</Total>
       </PLink>
 
-      <PLink>
+      <PLink onClick={onNextClick} disabled={currentPage === totalPages}>
         Next
         <svg
           width="14"
@@ -30,7 +55,7 @@ const Pagination: React.FC = () => {
         </svg>
       </PLink>
     </Container>
-  );
+  ) : null;
 };
 
 export default Pagination;

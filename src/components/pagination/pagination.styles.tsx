@@ -8,11 +8,16 @@ export const Container = styled.div`
   align-items: center;
 `;
 
-export const PLink = styled.a`
+export const PLink = styled.a<{disabled?: boolean}>`
+  cursor: pointer;
   & > svg {
     transform: rotate(-90deg);
     margin-left: 5px;
   }
+  &:hover {
+    text-decoration: underline;
+  }
+  pointer-events: ${({disabled}) => (disabled ? "none" : "inherit")};
 `;
 
 export const Page = styled.span`

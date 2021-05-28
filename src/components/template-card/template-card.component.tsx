@@ -7,17 +7,15 @@ import {
   Desc,
   TempLink,
 } from "./template-card.styles";
+import { ITemplate } from '../../redux/templates/template.reducer'
 
-const TemplateCard: React.FC = (props) => {
+const TemplateCard: React.FC<ITemplate> = ({ name, description }) => {
   return (
     <Container>
       <Upper>
-        <Title>Alumni Membership Form Template</Title>
+        <Title>{name}</Title>
         <Desc>
-          Engage your alumni network better with this alumni registration form
-          template. Embed this in your website. Engage your alumni network
-          better with this alumni registration form template. Embed this in your
-          website. Embed this in your website.
+          {description}
         </Desc>
       </Upper>
       <Lower>
