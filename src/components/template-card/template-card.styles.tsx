@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Container = styled.div`
   min-height: 210px;
   min-width: 100%;
-  box-shadow: 0px 4px 30px hsla(0, 0%, 0%, 0.08);
+  /* box-shadow: 0px 4px 30px hsla(0, 0%, 0%, 0.08); */
   border-radius: 5px;
   overflow-x: hidden;
   display: flex;
@@ -11,6 +11,9 @@ export const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   margin: 0 auto;
+  -webkit-box-shadow: 0px 0px 9px 1px hsla(0, 0%, 0%, 0.08);
+  -moz-box-shadow: 0px 0px 9px 1px hsla(0, 0%, 0%, 0.08);
+  box-shadow: 0px 0px 9px 1px hsla(0, 0%, 0%, 0.08);
 `;
 
 export const Upper = styled.div`
