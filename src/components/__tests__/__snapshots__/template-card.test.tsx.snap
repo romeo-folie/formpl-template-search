@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`template card matches snapshot 1`] = `
+<div
+  className="sc-bdnxRM crfAaz"
+>
+  <div
+    className="sc-gtsrHT KltRp"
+  >
+    <h3
+      className="sc-hKFxyN eKCFkS"
+    >
+      Test template
+    </h3>
+    <p
+      className="sc-eCApnc cVQGsc"
+    >
+      Test description
+    </p>
+  </div>
+  <div
+    className="sc-dlnjwi dNMoCL"
+  >
+    <a
+      className="sc-jSFjdj hBOqe"
+    >
+      Use Template
+    </a>
+  </div>
+</div>
+`;
