@@ -12,6 +12,11 @@ import {
 import {Dispatch} from "redux";
 import axios from "axios";
 
+interface ISort {
+  label: string;
+  value: string;
+}
+
 export const fetchTemplatesStart = (): TemplateAction => ({
   type: FETCH_TEMPLATES_START,
 });
@@ -52,13 +57,6 @@ export const searchTemplates = (value: string): TemplateAction => ({
   payload: value,
 });
 
-interface ISort {
-  label: string;
-  value: string;
-}
-
-// create action creator for sortBySelect
-// it should come with the name of the select and the value
 export const sortTemplates = (sortData: ISort): TemplateAction | undefined => {
   switch (sortData.label) {
     case "Category":

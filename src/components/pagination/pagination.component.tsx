@@ -7,10 +7,6 @@ import {TemplateState} from "../../redux/templates/template.reducer";
 const Pagination: React.FC = () => {
   const dispatch = useDispatch();
 
-  const isLoading = useSelector<TemplateState, TemplateState["isFetching"]>(
-    (state) => state.isFetching
-  );
-
   const totalPages = useSelector<TemplateState, TemplateState["totalPages"]>(
     (state) => state.totalPages
   );
@@ -27,9 +23,11 @@ const Pagination: React.FC = () => {
     dispatch(loadNewPage(-1));
   };
 
-  return !isLoading ? (
+  return totalPages ? (
     <Container>
-      <PLink onClick={onPreviousClick} disabled={currentPage === 1}>Previous</PLink>
+      <PLink onClick={onPreviousClick} disabled={currentPage === 1}>
+        Previous
+      </PLink>
 
       <PLink>
         <Page>{currentPage}</Page>

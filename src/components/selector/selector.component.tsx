@@ -8,6 +8,9 @@ import {
   List,
   ListItem,
 } from "./selector.styles";
+import {useDispatch} from "react-redux";
+import {sortTemplates} from "../../redux/templates/template.actions";
+// import {TemplateState} from "../../redux/templates/template.reducer";
 // import Caret from "../../assets/caret.svg";
 
 interface IProps {
@@ -16,17 +19,39 @@ interface IProps {
 }
 
 const Selector: React.FC<IProps> = ({label, options}) => {
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(
     options[0] || null
   );
 
+  // need to store state variables for every one of these selectors
+  // then I also need to somehow be able to specifically fetch the right value for this
+  // particular selector
+  // interface IStateMap {
+  //   "Alphabetical Order": string;
+  //   "Date Created": string;
+  //   "Category": string;
+  // }
+
+  // const labelStateMap: IStateMap = {
+  //   "Alphabetical Order": "alphaOrder",
+  //   "Date Created": "dateOrder",
+  //   "Category": "category"
+  // }
+
+  // const selectedOption = useSelector<TemplateState, TemplateState[`${labelStateMap[label]}`]>((state) => state[labelStateMap[label]])
+
+  // I know exactly what the labels are gonna be
+  // based on the label
+  // I can determine which state var to select and use as the selected Option
+
   const toggle = () => setIsOpen(!isOpen);
 
   const onOptionClick = (value: string): void => {
-    // Dispatch action to store with name of selector and value
     setSelectedOption(value);
     setIsOpen(false);
+    dispatch(sortTemplates({label, value}));
   };
 
   return (

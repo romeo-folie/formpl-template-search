@@ -6,7 +6,7 @@ import Selector from "../selector/selector.component";
 const categoryOptions = ["All", "Education", "E-commerce", "Health"];
 const orderOptions = ["Default", "Ascending", "Descending"];
 
-const Header: React.FC = (props) => {
+const Header: React.FC = () => {
   return (
     <HeaderContainer>
       <SearchInput />

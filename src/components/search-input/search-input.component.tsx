@@ -1,15 +1,18 @@
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent} from "react";
 import {InputContainer, Input, Icon} from "./search-input.styles";
 import Magnifier from "../../assets/search.svg";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {searchTemplates} from "../../redux/templates/template.actions";
+import {TemplateState} from "../../redux/templates/template.reducer";
 
 const SearchInput: React.FC = () => {
   const dispatch = useDispatch();
-  const [searchValue, setSearchValue] = useState<string>("");
+
+  const searchValue = useSelector<TemplateState, TemplateState["searchValue"]>(
+    (state) => state.searchValue
+  );
 
   const onChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setSearchValue(event.target.value);
     dispatch(searchTemplates(event.target.value));
   };
 

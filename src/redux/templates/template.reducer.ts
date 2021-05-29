@@ -1,4 +1,9 @@
-import {addFilter, removeFilter} from "../../helpers";
+import {
+  addFilter,
+  removeFilter,
+  sortAscending,
+  sortDescending,
+} from "../../helpers";
 import {
   FETCH_TEMPLATES_ERROR,
   FETCH_TEMPLATES_START,
@@ -7,7 +12,7 @@ import {
   FILTER_BY_SEARCH,
   SORT_BY_CATEGORY,
   SORT_BY_NAME,
-  SORT_BY_DATE
+  SORT_BY_DATE,
 } from "./template.types";
 
 export interface ITemplate {
@@ -18,19 +23,10 @@ export interface ITemplate {
   link: string;
 }
 
-// To add
-// filteredTemplates
-// totalCount - count of fetched templates
-// currentCount - to be used as limit when slicing templates - initial value is the countPerPage
-// countPerPage
-// currentPage
-// totalPages
-
-// filteredPages
 export interface TemplateState {
   templates: ITemplate[];
   filteredTemplates: ITemplate[];
-  searchResults: ITemplate[];
+  filterResults: ITemplate[];
   totalCount: number;
   currentCount: number;
   countPerPage: number;
@@ -39,12 +35,16 @@ export interface TemplateState {
   isFetching: boolean;
   error: string | null;
   filters: string[];
+  category: string;
+  searchValue: string;
+  alphaOrder: string;
+  dateOrder: string;
 }
 
 const INITIAL_TEMPLATE_STATE: TemplateState = {
   templates: [],
   filteredTemplates: [],
-  searchResults: [],
+  filterResults: [],
   totalCount: 0,
   currentCount: 0,
   countPerPage: 15,
@@ -53,6 +53,10 @@ const INITIAL_TEMPLATE_STATE: TemplateState = {
   isFetching: false,
   error: null,
   filters: [],
+  category: "All",
+  searchValue: "",
+  alphaOrder: "Default",
+  dateOrder: "Default",
 };
 
 export type TemplateAction =
@@ -63,7 +67,7 @@ export type TemplateAction =
   | {type: typeof FILTER_BY_SEARCH; payload: string}
   | {type: typeof SORT_BY_CATEGORY; payload: string}
   | {type: typeof SORT_BY_NAME; payload: string}
-  | {type: typeof SORT_BY_DATE; payload: string}
+  | {type: typeof SORT_BY_DATE; payload: string};
 
 const TemplateReducer = (
   state: TemplateState = INITIAL_TEMPLATE_STATE,
@@ -106,16 +110,10 @@ const TemplateReducer = (
 
         newPageState.currentCount += state.countPerPage;
         newPageState.currentPage += action.payload;
-        // we might have an issue here as it slices the main
-        // templates array in state
-        // I could instead make it slice the filteredTemplates
-        // but would that make sense?
-        // maybe this could be dependent on if the filters array is populated
-        // if it is, we'll slice filteredTemplates instead
         newPageState.filteredTemplates =
           state.filters.length === 0
             ? state.templates.slice(lowerLimit, upperLimit)
-            : state.searchResults.slice(lowerLimit, upperLimit);
+            : state.filterResults.slice(lowerLimit, upperLimit);
       } else {
         const upperLimit = state.currentCount;
         const lowerLimit = state.currentCount - state.countPerPage;
@@ -128,7 +126,7 @@ const TemplateReducer = (
                 lowerLimit - state.countPerPage,
                 upperLimit - state.countPerPage
               )
-            : state.searchResults.slice(
+            : state.filterResults.slice(
                 lowerLimit - state.countPerPage,
                 upperLimit - state.countPerPage
               );
@@ -136,11 +134,13 @@ const TemplateReducer = (
       return newPageState;
     case FILTER_BY_SEARCH:
       const searchState = Object.assign({}, state);
+      searchState.searchValue = action.payload;
+
       const searchResults = state.templates.filter((temp) =>
         temp.name.toLowerCase().includes(action.payload.toLowerCase())
       );
 
-      searchState.searchResults = searchResults;
+      searchState.filterResults = searchResults;
 
       if (action.payload) {
         searchState.filters = addFilter(FILTER_BY_SEARCH, state.filters);
@@ -159,7 +159,7 @@ const TemplateReducer = (
             0,
             state.countPerPage
           );
-          searchState.searchResults = [];
+          searchState.filterResults = [];
           searchState.totalCount = state.templates.length;
           searchState.totalPages = Math.ceil(
             searchState.totalCount / state.countPerPage
@@ -167,6 +167,76 @@ const TemplateReducer = (
         }
       }
       return searchState;
+    case SORT_BY_CATEGORY:
+      const sortCategoryState = Object.assign({}, state);
+      sortCategoryState.searchValue = "";
+      sortCategoryState.filters = [];
+
+      if (action.payload === "All") {
+        sortCategoryState.category = "All";
+        sortCategoryState.filteredTemplates = state.templates.slice(
+          0,
+          state.countPerPage
+        );
+        sortCategoryState.filterResults = [];
+        sortCategoryState.totalCount = state.templates.length;
+        sortCategoryState.totalPages = Math.ceil(
+          sortCategoryState.totalCount / state.countPerPage
+        );
+      } else {
+        sortCategoryState.category = action.payload;
+        const sortResults = state.templates.filter((temp) =>
+          temp.category.includes(action.payload)
+        );
+        sortCategoryState.filters = addFilter(SORT_BY_CATEGORY, state.filters);
+        sortCategoryState.filterResults = sortResults;
+        sortCategoryState.filteredTemplates = sortResults.slice(
+          0,
+          state.countPerPage
+        );
+        sortCategoryState.totalCount = sortResults.length;
+        sortCategoryState.totalPages = Math.ceil(
+          sortCategoryState.totalCount / state.countPerPage
+        );
+      }
+      return sortCategoryState;
+    case SORT_BY_NAME:
+      const sortNameState = Object.assign({}, state);
+
+      if (action.payload === "Default") {
+        // acting funny when default value is selected
+        // check that out
+        sortNameState.alphaOrder = "Default";
+        sortNameState.filters = removeFilter(SORT_BY_NAME, state.filters);
+        sortNameState.filteredTemplates = state.templates.slice(
+          0,
+          state.countPerPage
+        );
+        sortNameState.totalCount = state.templates.length;
+        sortNameState.totalPages = Math.ceil(
+          sortNameState.totalCount / state.countPerPage
+        );
+      } else {
+        sortNameState.alphaOrder = action.payload;
+
+        if (state.filters.length) {
+          sortNameState.filterResults =
+            action.payload === "Ascending"
+              ? sortAscending(state.filterResults, "name")
+              : sortDescending(state.filterResults, "name");
+        } else {
+          sortNameState.filterResults =
+            action.payload === "Ascending"
+              ? sortAscending(state.templates, "name")
+              : sortDescending(state.templates, "name");
+        }
+        sortNameState.filters = addFilter(SORT_BY_NAME, state.filters);
+        sortNameState.filteredTemplates = sortNameState.filterResults.slice(
+          0,
+          state.countPerPage
+        );
+      }
+      return sortNameState;
     default:
       return state;
   }

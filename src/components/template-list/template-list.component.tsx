@@ -17,10 +17,14 @@ const TemplateList: React.FC = () => {
     (state) => state.totalCount
   );
 
+  const currentCategory = useSelector<TemplateState, TemplateState["category"]>(
+    (state) => state.category
+  );
+
   return (
     <Container>
       <Header>
-        <Title>All Templates</Title>
+        <Title>{currentCategory} Templates</Title>
         <Count>{templateCount} Templates</Count>
       </Header>
       <GridWithSpinner>
