@@ -27,6 +27,7 @@ export interface TemplateState {
   templates: ITemplate[];
   filteredTemplates: ITemplate[];
   filterResults: ITemplate[];
+  originalOrder: ITemplate[];
   totalCount: number;
   currentCount: number;
   countPerPage: number;
@@ -45,6 +46,7 @@ const INITIAL_TEMPLATE_STATE: TemplateState = {
   templates: [],
   filteredTemplates: [],
   filterResults: [],
+  originalOrder: [],
   totalCount: 0,
   currentCount: 0,
   countPerPage: 15,
@@ -173,7 +175,7 @@ const TemplateReducer = (
       sortCategoryState.filters = [];
 
       if (action.payload === "All") {
-        sortCategoryState.category = "All";
+        sortCategoryState.category = action.payload;
         sortCategoryState.filteredTemplates = state.templates.slice(
           0,
           state.countPerPage
@@ -204,31 +206,49 @@ const TemplateReducer = (
       const sortNameState = Object.assign({}, state);
 
       if (action.payload === "Default") {
-        // acting funny when default value is selected
-        // check that out
-        sortNameState.alphaOrder = "Default";
+        sortNameState.alphaOrder = action.payload;
         sortNameState.filters = removeFilter(SORT_BY_NAME, state.filters);
-        sortNameState.filteredTemplates = state.templates.slice(
-          0,
-          state.countPerPage
-        );
-        sortNameState.totalCount = state.templates.length;
-        sortNameState.totalPages = Math.ceil(
-          sortNameState.totalCount / state.countPerPage
-        );
+        if (sortNameState.filters.length === 0) {
+          sortNameState.filterResults = [];
+          sortNameState.originalOrder = [];
+          sortNameState.filteredTemplates = state.templates.slice(
+            0,
+            state.countPerPage
+          );
+          sortNameState.totalCount = state.templates.length;
+          sortNameState.totalPages = Math.ceil(
+            sortNameState.totalCount / state.countPerPage
+          );
+        } else {
+          sortNameState.filterResults = [...state.originalOrder];
+          sortNameState.filteredTemplates = sortNameState.filterResults.slice(
+            0,
+            state.countPerPage
+          );
+          sortNameState.totalCount = state.filterResults.length;
+          sortNameState.totalPages = Math.ceil(
+            sortNameState.totalCount / state.countPerPage
+          );
+        }
       } else {
         sortNameState.alphaOrder = action.payload;
 
         if (state.filters.length) {
+          const toSort = [...state.filterResults];
+          sortNameState.originalOrder = [...state.filterResults];
+
           sortNameState.filterResults =
             action.payload === "Ascending"
-              ? sortAscending(state.filterResults, "name")
-              : sortDescending(state.filterResults, "name");
+              ? sortAscending(toSort, "name")
+              : sortDescending(toSort, "name");
         } else {
+          const toSort = [...state.templates];
+          sortNameState.originalOrder = [...state.templates];
+
           sortNameState.filterResults =
             action.payload === "Ascending"
-              ? sortAscending(state.templates, "name")
-              : sortDescending(state.templates, "name");
+              ? sortAscending(toSort, "name")
+              : sortDescending(toSort, "name");
         }
         sortNameState.filters = addFilter(SORT_BY_NAME, state.filters);
         sortNameState.filteredTemplates = sortNameState.filterResults.slice(
@@ -237,6 +257,59 @@ const TemplateReducer = (
         );
       }
       return sortNameState;
+    case SORT_BY_DATE:
+      const sortDateState = Object.assign({}, state);
+      sortDateState.dateOrder = action.payload;
+
+      if (action.payload === "Default") {
+        sortDateState.filters = removeFilter(SORT_BY_DATE, state.filters);
+        if (sortDateState.filters.length === 0) {
+          sortDateState.filterResults = [];
+          sortDateState.originalOrder = [];
+          sortDateState.filteredTemplates = state.templates.slice(
+            0,
+            state.countPerPage
+          );
+          sortDateState.totalCount = state.templates.length;
+          sortDateState.totalPages = Math.ceil(
+            sortDateState.totalCount / state.countPerPage
+          );
+        } else {
+          sortDateState.filterResults = [...state.originalOrder];
+          sortDateState.filteredTemplates = sortDateState.filterResults.slice(
+            0,
+            state.countPerPage
+          );
+          sortDateState.totalCount = state.filterResults.length;
+          sortDateState.totalPages = Math.ceil(
+            sortDateState.totalCount / state.countPerPage
+          );
+        }
+      } else {
+        if (state.filters.length) {
+          const toSort = [...state.filterResults];
+          sortDateState.originalOrder = [...state.filterResults];
+
+          sortDateState.filterResults =
+            action.payload === "Ascending"
+              ? sortAscending(toSort, "created")
+              : sortDescending(toSort, "created");
+        } else {
+          const toSort = [...state.templates];
+          sortDateState.originalOrder = [...state.templates];
+
+          sortDateState.filterResults =
+            action.payload === "Ascending"
+              ? sortAscending(toSort, "created")
+              : sortDescending(toSort, "created");
+        }
+        sortDateState.filters = addFilter(SORT_BY_DATE, state.filters);
+        sortDateState.filteredTemplates = sortDateState.filterResults.slice(
+          0,
+          state.countPerPage
+        );
+      }
+      return sortDateState;
     default:
       return state;
   }

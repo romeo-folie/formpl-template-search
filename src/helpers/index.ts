@@ -14,16 +14,16 @@ export const removeFilter = (filter: string, filters: string[]): string[] => {
 
 export const sortAscending = (array: any[], field: string): ITemplate[] => {
   return array.sort((a, b) => {
-    if (a[field] > b[field]) return 1;
-    if (b[field] > a[field]) return -1;
+    if (a[field].toUpperCase() > b[field].toUpperCase()) return 1;
+    if (b[field].toUpperCase() > a[field].toUpperCase()) return -1;
     return 0;
   });
 };
 
 export const sortDescending = (array: any[], field: string): ITemplate[] => {
   return array.sort((a, b) => {
-    if (a[field] > b[field]) return -1;
-    if (b[field] > a[field]) return 1;
+    if (a[field].toUpperCase() > b[field].toUpperCase()) return -1;
+    if (b[field].toUpperCase() > a[field].toUpperCase()) return 1;
     return 0;
   });
 };
