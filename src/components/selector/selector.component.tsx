@@ -3,7 +3,6 @@ import {
   Container,
   Label,
   Header,
-  // Icon,
   ListContainer,
   List,
   ListItem,
@@ -32,9 +31,9 @@ const Selector: React.FC<IProps> = ({label, options}) => {
 
   const toggle = () => setIsOpen(!isOpen);
 
-  const selectedOption = useSelector<TemplateState, string>((state) => {
-    return state.sorters[labelStateMap[label]];
-  });
+  const selectedOption = useSelector<TemplateState, string>(
+    (state) => state.sorters[labelStateMap[label]]
+  );
 
   const onOptionClick = (value: string): void => {
     setIsOpen(false);
