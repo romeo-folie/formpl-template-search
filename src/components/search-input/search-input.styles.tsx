@@ -7,7 +7,7 @@ export const InputContainer = styled.div`
   border: 0.5px solid #bdbdbd;
   border-radius: 2px;
   width: 200px;
-  padding: 5px 10px;
+  padding: 10px;
   @media screen and (max-width: 768px) {
     width: 90%;
     margin: 10px auto 20px;

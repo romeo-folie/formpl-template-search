@@ -20,12 +20,11 @@ export const Count = styled.span``;
 
 export const Grid = styled.div`
   display: grid;
-  width: 98%;
-  /* grid-template-columns: 1fr 1fr 1fr; */
+  width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   justify-content: center;
   align-items: center;
-  /* row-gap: 20px; */
-  grid-gap: 30px;
+  column-gap: 0;
+  row-gap: 30px;
   margin: 30px auto 0;
 `;
