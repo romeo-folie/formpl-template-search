@@ -8,26 +8,35 @@ import {
   List,
   ListItem,
 } from "./selector.styles";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {sortTemplates} from "../../redux/templates/template.actions";
-// import {TemplateState} from "../../redux/templates/template.reducer";
+import {
+  TemplateState,
+  ISorterKeys,
+} from "../../redux/templates/template.reducer";
 
 interface IProps {
   label: string;
   options: string[];
 }
 
+const labelStateMap: ISorterKeys = {
+  "Alphabetical Order": "alphaOrder",
+  Category: "category",
+  "Date Created": "dateOrder",
+};
+
 const Selector: React.FC<IProps> = ({label, options}) => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(
-    options[0] || null
-  );
 
   const toggle = () => setIsOpen(!isOpen);
 
+  const selectedOption = useSelector<TemplateState, string>((state) => {
+    return state.sorters[labelStateMap[label]];
+  });
+
   const onOptionClick = (value: string): void => {
-    setSelectedOption(value);
     setIsOpen(false);
     dispatch(sortTemplates({label, value}));
   };

@@ -17,8 +17,8 @@ const TemplateList: React.FC = () => {
     (state) => state.totalCount
   );
 
-  const currentCategory = useSelector<TemplateState, TemplateState["category"]>(
-    (state) => state.category
+  const currentCategory = useSelector<TemplateState, string>(
+    (state) => state.sorters.category
   );
 
   return (

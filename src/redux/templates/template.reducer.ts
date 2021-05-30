@@ -23,6 +23,16 @@ export interface ITemplate {
   link: string;
 }
 
+export interface ISorterKeys {
+  [key: string]: string;
+}
+
+interface ISorters extends ISorterKeys {
+  category: string;
+  alphaOrder: string;
+  dateOrder: string;
+}
+
 export interface TemplateState {
   templates: ITemplate[];
   filteredTemplates: ITemplate[];
@@ -36,10 +46,8 @@ export interface TemplateState {
   isFetching: boolean;
   error: string | null;
   filters: string[];
-  category: string;
   searchValue: string;
-  alphaOrder: string;
-  dateOrder: string;
+  sorters: ISorters;
 }
 
 const INITIAL_TEMPLATE_STATE: TemplateState = {
@@ -55,10 +63,12 @@ const INITIAL_TEMPLATE_STATE: TemplateState = {
   isFetching: false,
   error: null,
   filters: [],
-  category: "All",
   searchValue: "",
-  alphaOrder: "Default",
-  dateOrder: "Default",
+  sorters: {
+    category: "All",
+    alphaOrder: "Default",
+    dateOrder: "Default",
+  },
 };
 
 export type TemplateAction =
@@ -172,10 +182,12 @@ const TemplateReducer = (
     case SORT_BY_CATEGORY:
       const sortCategoryState = Object.assign({}, state);
       sortCategoryState.searchValue = "";
+      sortCategoryState.sorters.dateOrder = "Default";
+      sortCategoryState.sorters.alphaOrder = "Default";
       sortCategoryState.filters = [];
 
       if (action.payload === "All") {
-        sortCategoryState.category = action.payload;
+        sortCategoryState.sorters.category = action.payload;
         sortCategoryState.filteredTemplates = state.templates.slice(
           0,
           state.countPerPage
@@ -186,7 +198,7 @@ const TemplateReducer = (
           sortCategoryState.totalCount / state.countPerPage
         );
       } else {
-        sortCategoryState.category = action.payload;
+        sortCategoryState.sorters.category = action.payload;
         const sortResults = state.templates.filter((temp) =>
           temp.category.includes(action.payload)
         );
@@ -206,7 +218,7 @@ const TemplateReducer = (
       const sortNameState = Object.assign({}, state);
 
       if (action.payload === "Default") {
-        sortNameState.alphaOrder = action.payload;
+        sortNameState.sorters.alphaOrder = action.payload;
         sortNameState.filters = removeFilter(SORT_BY_NAME, state.filters);
         if (sortNameState.filters.length === 0) {
           sortNameState.filterResults = [];
@@ -231,7 +243,7 @@ const TemplateReducer = (
           );
         }
       } else {
-        sortNameState.alphaOrder = action.payload;
+        sortNameState.sorters.alphaOrder = action.payload;
 
         if (state.filters.length) {
           const toSort = [...state.filterResults];
@@ -259,7 +271,7 @@ const TemplateReducer = (
       return sortNameState;
     case SORT_BY_DATE:
       const sortDateState = Object.assign({}, state);
-      sortDateState.dateOrder = action.payload;
+      sortDateState.sorters.dateOrder = action.payload;
 
       if (action.payload === "Default") {
         sortDateState.filters = removeFilter(SORT_BY_DATE, state.filters);
