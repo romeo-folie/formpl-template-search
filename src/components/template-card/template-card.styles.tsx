@@ -3,8 +3,6 @@ import styled from "styled-components";
 export const Container = styled.div`
   min-height: 210px;
   min-width: 90%;
-  /* box-shadow: 0px 4px 30px hsla(0, 0%, 0%, 0.08); */
-  border-radius: 5px;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;

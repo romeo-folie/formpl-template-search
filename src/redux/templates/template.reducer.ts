@@ -147,6 +147,7 @@ const TemplateReducer = (
     case FILTER_BY_SEARCH:
       const searchState = Object.assign({}, state);
       searchState.searchValue = action.payload;
+      searchState.currentPage = 1;
 
       const searchResults = state.templates.filter((temp) =>
         temp.name.toLowerCase().includes(action.payload.toLowerCase())
@@ -185,6 +186,7 @@ const TemplateReducer = (
       sortCategoryState.sorters.dateOrder = "Default";
       sortCategoryState.sorters.alphaOrder = "Default";
       sortCategoryState.filters = [];
+      sortCategoryState.currentPage = 1;
 
       if (action.payload === "All") {
         sortCategoryState.sorters.category = action.payload;
@@ -216,6 +218,7 @@ const TemplateReducer = (
       return sortCategoryState;
     case SORT_BY_NAME:
       const sortNameState = Object.assign({}, state);
+      sortNameState.currentPage = 1;
 
       if (action.payload === "Default") {
         sortNameState.sorters.alphaOrder = action.payload;
@@ -272,6 +275,7 @@ const TemplateReducer = (
     case SORT_BY_DATE:
       const sortDateState = Object.assign({}, state);
       sortDateState.sorters.dateOrder = action.payload;
+      sortDateState.currentPage = 1;
 
       if (action.payload === "Default") {
         sortDateState.filters = removeFilter(SORT_BY_DATE, state.filters);
